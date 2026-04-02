@@ -1,0 +1,235 @@
+// SCSS Variables
+$primary-color: #667eea;
+$secondary-color: #764ba2;
+$error-color: #e74c3c;
+$text-light: #666;
+$text-dark: #555;
+$text-muted: #888;
+$white: #fff;
+$border-radius-sm: 15px;
+$border-radius-md: 20px;
+$border-radius-lg: 50px;
+$font-family-primary: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+$font-family-mono: 'Courier New', monospace;
+
+// SCSS Mixins
+@mixin gradient-bg($color1: $primary-color, $color2: $secondary-color) {
+    background: linear-gradient(135deg, $color1 0%, $color2 100%);
+}
+
+@mixin gradient-text($color1: $primary-color, $color2: $secondary-color) {
+    background: linear-gradient(135deg, $color1, $color2);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+@mixin glass-morphism($opacity: 0.95, $blur: 10px) {
+    background: rgba($white, $opacity);
+    backdrop-filter: blur($blur);
+}
+
+@mixin button-hover-effect($scale: 1.02, $shadow-color: $primary-color) {
+    transition: all 0.2s ease;
+
+    &:hover {
+        transform: translateY(-2px) scale($scale);
+        box-shadow: 0 10px 20px rgba($shadow-color, 0.3);
+    }
+
+    &:active {
+        transform: translateY(0) scale(1);
+    }
+}
+
+@mixin responsive-text($desktop-size, $mobile-size) {
+    font-size: $desktop-size;
+
+    @media (max-width: 768px) {
+        font-size: $mobile-size;
+    }
+}
+
+@mixin flex-center($direction: row, $gap: 0) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: $direction;
+
+    @if $gap >0 {
+        gap: $gap;
+    }
+}
+
+// Base Component Styles
+.deadline-countdown-container {
+    @include flex-center();
+    min-height: 100vh;
+    @include gradient-bg();
+    font-family: $font-family-primary;
+
+    .countdown-card {
+        @include glass-morphism();
+        border-radius: $border-radius-md;
+        padding: 3rem;
+        box-shadow: 0 20px 40px rgba(#000, 0.1);
+        text-align: center;
+        max-width: 500px;
+        width: 100%;
+        margin: 2rem;
+
+        @media (max-width: 768px) {
+            padding: 2rem;
+            margin: 1rem;
+        }
+
+        .countdown-title {
+            @include responsive-text(2.5rem, 2rem);
+            font-weight: 700;
+            @include gradient-text();
+            margin-bottom: 2rem;
+        }
+
+        .loading-spinner {
+            @include flex-center(column, 1rem);
+
+            .spinner {
+                width: 40px;
+                height: 40px;
+                border: 4px solid lighten($text-light, 20%);
+                border-top: 4px solid $primary-color;
+                border-radius: 50%;
+                animation: spin 1s linear infinite;
+            }
+
+            p {
+                color: $text-light;
+                font-size: 1.1rem;
+            }
+        }
+
+        .error-message {
+            color: $error-color;
+            text-align: center;
+
+            p {
+                font-size: 1.1rem;
+                margin-bottom: 1rem;
+            }
+
+            .retry-button {
+                @include gradient-bg();
+                color: $white;
+                border: none;
+                padding: 0.8rem 2rem;
+                border-radius: $border-radius-lg;
+                font-size: 1rem;
+                font-weight: 600;
+                cursor: pointer;
+                @include button-hover-effect();
+            }
+        }
+
+        .countdown-display {
+            .countdown-label {
+                font-size: 1.2rem;
+                color: $text-dark;
+                margin-bottom: 1rem;
+                font-weight: 500;
+            }
+
+            .countdown-value {
+                @include responsive-text(4rem, 3rem);
+                font-weight: 900;
+                @include gradient-text();
+                margin-bottom: 2rem;
+                line-height: 1;
+                animation: pulse 2s infinite;
+            }
+
+            %countdown-format-base {
+                margin-bottom: 1.5rem;
+                padding: 1.5rem;
+                background: rgba($primary-color, 0.05);
+                border-radius: $border-radius-sm;
+                border: 2px solid rgba($primary-color, 0.1);
+
+                .format-label {
+                    font-size: 0.9rem;
+                    color: $text-muted;
+                    font-weight: 600;
+                    text-transform: uppercase;
+                    letter-spacing: 0.5px;
+                    margin-bottom: 0.5rem;
+                }
+            }
+
+            .countdown-clock {
+                @extend %countdown-format-base;
+                border-color: rgba($primary-color, 0.3);
+                background: rgba($primary-color, 0.08);
+
+                .clock-display {
+                    @include responsive-text(2.5rem, 2rem);
+                    font-weight: 700;
+                    font-family: $font-family-mono;
+                    color: $primary-color;
+                    text-align: center;
+                    letter-spacing: 2px;
+                }
+            }
+
+            .countdown-formatted {
+                @extend %countdown-format-base;
+
+                .countdown-text {
+                    @include responsive-text(1.3rem, 1.1rem);
+                    color: $text-light;
+                    font-weight: 600;
+                    text-align: center;
+                }
+            }
+        }
+
+        // Dark mode specific styles for card
+        @media (prefers-color-scheme: dark) {
+            @include glass-morphism(0.1);
+            color: $white;
+            border: 1px solid rgba($white, 0.1);
+
+            .countdown-display {
+                .countdown-label {
+                    color: lighten($text-light, 20%);
+                }
+            }
+        }
+    }
+}
+
+// Keyframes
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.8;
+        transform: scale(1.05);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}

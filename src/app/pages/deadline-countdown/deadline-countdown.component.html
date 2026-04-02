@@ -1,0 +1,42 @@
+<div class="deadline-countdown-container">
+    @let secondLeft = secondsLeft$ | async;
+
+    <div class="countdown-card">
+        <h2 class="countdown-title">Countdown to Deadline</h2>
+
+        @if (loader()) {
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+            <p>Loading countdown...</p>
+        </div>
+        } @else if (error()) {
+        <div class="error-message">
+            <p>{{ error() }}</p>
+            <button class="retry-button" (click)="getDeadlineSeconds()">Retry</button>
+        </div>
+        } @else {
+        <div class="countdown-display">
+            <p class="countdown-label">Seconds left to deadline:</p>
+            <div class="countdown-value">
+                {{ secondLeft ?? 0 }}
+            </div>
+
+            <!-- Clock Format Display -->
+            <div class="countdown-clock">
+                <div class="format-label">Clock Format:</div>
+                <div class="clock-display">
+                    {{ (secondLeft ?? 0) | deadlineCountdown:'clock' }}
+                </div>
+            </div>
+
+            <!-- Countdown Format Display -->
+            <div class="countdown-formatted">
+                <div class="format-label">Countdown Format:</div>
+                <div class="countdown-text">
+                    {{ (secondLeft?? 0) | deadlineCountdown:'countdown' }}
+                </div>
+            </div>
+        </div>
+        }
+    </div>
+</div>
