@@ -16,16 +16,19 @@
         </div>
         } @else {
         <div class="countdown-display">
-            <p class="countdown-label">Seconds left to deadline:</p>
-            <div class="countdown-value">
-                {{ secondLeft ?? 0 }}
+            <!-- Clock Format Display -->
+            <div class="countdown-clock">
+                <div class="format-label">Compact Format:</div>
+                <div class="clock-display">
+                    {{ (secondLeft ?? 0) | deadlineCountdown: DeadlineCountdownFormat.Compact }}
+                </div>
             </div>
 
             <!-- Clock Format Display -->
             <div class="countdown-clock">
                 <div class="format-label">Clock Format:</div>
                 <div class="clock-display">
-                    {{ (secondLeft ?? 0) | deadlineCountdown:'clock' }}
+                    {{ (secondLeft ?? 0) | deadlineCountdown: DeadlineCountdownFormat.Clock }}
                 </div>
             </div>
 
@@ -33,7 +36,7 @@
             <div class="countdown-formatted">
                 <div class="format-label">Countdown Format:</div>
                 <div class="countdown-text">
-                    {{ (secondLeft?? 0) | deadlineCountdown:'countdown' }}
+                    {{ (secondLeft?? 0) | deadlineCountdown: DeadlineCountdownFormat.Countdown }}
                 </div>
             </div>
         </div>
